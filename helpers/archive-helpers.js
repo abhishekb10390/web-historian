@@ -35,12 +35,26 @@ exports.readListOfUrls = function(callback) {
 };
 
 exports.isUrlInList = function(url, callback) {
+  exports.readListOfUrls((urlList) => {
+    callback(urlList.includes(url));
+  });
 };
 
 exports.addUrlToList = function(url, callback) {
+  fs.appendFile(
+    exports.paths.list, 
+    url + '\n', 
+    (err) => {
+      if (err) {
+        throw err;
+      }
+      callback();
+    }
+  );
 };
 
 exports.isUrlArchived = function(url, callback) {
+  
 };
 
 exports.downloadUrls = function(urls) {
