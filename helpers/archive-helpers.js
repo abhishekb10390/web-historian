@@ -10,12 +10,12 @@ var request = require('request');
  * if you move any files, you'll only need to change your code in one place! Feel free to
  * customize it in any way you wish.
  */
-
 exports.paths = {
   siteAssets: path.join(__dirname, '../web/public'),
   archivedSites: path.join(__dirname, '../archives/sites'),
   list: path.join(__dirname, '../archives/sites.txt')
 };
+exports.notInList = [];
 
 // Used for stubbing paths for tests, do not modify
 exports.initialize = function(pathsObj) {
@@ -38,7 +38,11 @@ exports.readListOfUrls = function(callback) {
 
 exports.isUrlInList = function(url, callback) {
   exports.readListOfUrls((urlList) => {
-    callback(urlList.includes(url));
+    var isInList = urlList.includes(url);
+    if (!isInList) {
+      exports.notInList.push(url);
+    }
+    callback(isInList);
   });
 };
 
@@ -68,6 +72,7 @@ exports.isUrlArchived = function(url, callback) {
 exports.downloadUrls = function(urls) {
   urls.forEach((url) => {
     console.log('now downloading http://' + url);
-    request('http://' + url).pipe(fs.createWriteStream(exports.paths.archivedSites + '/' + url));
+    request('https://' + url).pipe(fs.createWriteStream(exports.paths.archivedSites + '/' + url));
   });
+  exports.notInList = [];
 };
