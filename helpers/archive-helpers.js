@@ -1,4 +1,5 @@
 var fs = require('fs');
+var http = require('http');
 var path = require('path');
 var _ = require('underscore');
 
@@ -54,9 +55,39 @@ exports.addUrlToList = function(url, callback) {
 };
 
 exports.isUrlArchived = function(url, callback) {
-  
+  fs.access(exports.paths.archivedSites + '/' + url, (err, stats) => {
+    if (err) {
+      callback(false);
+    } else {
+      callback(true);
+    }
+  });
 };
 
 exports.downloadUrls = function(urls) {
+  urls.forEach((url) => {
+    var file = fs.createWriteStream(exports.paths.archivedSites + '/' + url);
+    var options = {
+      host: url,
+      port: 80,
+      path: '/'
+    };
   
+    // http.get(options, (res) => {
+    // }).on('error', (e) => {
+    //   console.log('download url error', e);
+    // }).on('data', (data) => {
+    //   file.pipe(data);
+    // });
+
+    http.get(options, (res) => {
+    }).on('error', (e) => {
+      console.log('download url error', e);
+    }).on('data', (data) => {
+      file.write(data);
+    }).on('end', () => {
+      file.end();
+    });
+  });
+    
 };
