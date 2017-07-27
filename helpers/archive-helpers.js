@@ -67,7 +67,7 @@ exports.isUrlArchived = function(url, callback) {
 
 exports.downloadUrls = function(urls) {
   urls.forEach((url) => {
-    console.log('http://' + url);
+    console.log('now downloading http://' + url);
     request('http://' + url).pipe(fs.createWriteStream(exports.paths.archivedSites + '/' + url));
   });
 };

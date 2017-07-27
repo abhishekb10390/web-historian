@@ -20,21 +20,31 @@ exports.handleRequest = function (req, res) {
     req.on('end', () => {
       url = url.slice(4);
       
-      parsedUrl = urlapi.parse(url);
-      console.log(parsedUrl.href, 'href');
-      archive.downloadUrls([parsedUrl.href]);
+      parsedUrl = urlapi.parse(url).href;
       // httpHelpers.serveAssets(res, archive.paths.archivedSites + '/' + parsedUrl.href);
-      // archive.isUrlInList(url, (isInList) => {
-      //   if (isInList) {
-      //     archive.isUrlArchived(url, () => {});
-      //   } else {
-          
-      //   }
-      // });  
+      archive.isUrlInList(parsedUrl, (isInList) => {
+        if (isInList) {
+          // archive.downloadUrls([parsedUrl]);
+          archive.isUrlArchived(url, (isArchived) => {
+            if (isArchived) {
+              // console.log(archive.paths.archivedSites + '/' + parsedUrl);
+              httpHelpers.serveAssets(res, archive.paths.archivedSites + '/' + parsedUrl, null, 302); 
+            } else {
+              httpHelpers.serveAssets(res, './web/public/loading.html', null, 302); 
+            }
+          });
+
+        } else {
+          archive.addUrlToList(parsedUrl, () => {
+            // archive.downloadUrls([parsedUrl]);
+            httpHelpers.serveAssets(res, './web/public/loading.html', null, 302); 
+          });
+        }
+      });  
     
+      
     });
 
-    httpHelpers.serveAssets(res, './web/public/index.html'); 
   }
 
   // res.end(archive.paths.list);
