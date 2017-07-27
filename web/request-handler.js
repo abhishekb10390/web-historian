@@ -1,6 +1,7 @@
 var path = require('path');
 var archive = require('../helpers/archive-helpers');
 var fs = require('fs');
+var httpHelpers = require('./http-helpers');
 // require more modules/folders here!
 
 var headers = {
@@ -18,18 +19,8 @@ var sendResponse = (response, data, statusCode) => {
 };
 
 exports.handleRequest = function (req, res) {
-  fs.readFile('./web/public/index.html', function(err, html) {
-    if (err) {
-      throw err;
-    }
-    statusCode = 200;
-    headers['Content-Type'] = 'text/html';
-    res.writeHead(statusCode, headers);
-    res.write(html);
-    res.end();
-  });
   
-  
+  httpHelpers.serveAssets(res, './web/public/index.html');
 
   // fs.readFile('www.google.com', function(err, html) {
   //   if (err) {
