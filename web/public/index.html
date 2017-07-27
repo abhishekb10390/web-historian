@@ -2,11 +2,26 @@
 <html>
 <head>
   <link rel="stylesheet" type="text/css" href="styles.css" />
+  <script
+  src="http://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
 </head>
 <body>
   Enter a URL here:
   <form method="POST">
     <input type="input" name="url"></input>
   </form>
+  <script>
+    $(function() {
+      $('form').on('keyUp', function(event) {
+        event.preventDefault();
+        console.log($('input').val());
+        if (event.keyCode === 13) {
+          console.log($('input').val()); 
+        }
+      });
+    });
+  </script>
 </body>
 </html>
