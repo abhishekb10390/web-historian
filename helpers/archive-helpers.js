@@ -38,11 +38,7 @@ exports.readListOfUrls = function(callback) {
 
 exports.isUrlInList = function(url, callback) {
   exports.readListOfUrls((urlList) => {
-    var isInList = urlList.includes(url);
-    if (!isInList) {
-      exports.notInList.push(url);
-    }
-    callback(isInList);
+    callback(urlList.includes(url));
   });
 };
 

@@ -1,7 +1,8 @@
 var http = require('http');
 var handler = require('./request-handler');
 var initialize = require('./initialize.js');
-
+var cron = require('node-cron');
+var archive = require('../helpers/archive-helpers');
 // Why do you think we have this here?
 // HINT: It has to do with what's in .gitignore
 initialize('./archives');
@@ -9,6 +10,10 @@ initialize('./archives');
 var port = 8080;
 var ip = '127.0.0.1';
 var server = http.createServer(handler.handleRequest);
+
+cron.schedule('* * * * *', function() {
+  archive.downloadUrls(archive.notInList);
+});
 
 if (module.parent) {
   module.exports = server;
