@@ -9,10 +9,12 @@ var urlapi = require('url');
 
 
 exports.handleRequest = function (req, res) {
-  // if (req.url === '/') {
 
-  // var reqUrl = urlapi.parse(req);
+  var reqUrl = urlapi.parse(req.url).pathname;
+  if (reqUrl === '/') { reqUrl = '/index.html'; }
+
   if (req.method === 'GET') {
+    
     httpHelpers.serveAssets(res, './web/public/index.html');
   } else if (req.method === 'POST') {
     var url = '';
@@ -33,11 +35,14 @@ exports.handleRequest = function (req, res) {
             }
           });
         } else {
-          archive.notInList.push(parsedUrl);
-          console.log('adding to not in List', archive.notInList);
-          archive.addUrlToList(parsedUrl, () => {
-            httpHelpers.serveAssets(res, './web/public/loading.html', null, 302); 
-          });
+          if (url.startsWith('www')) {
+            archive.notInList.push(parsedUrl);
+            console.log('adding to not in List', archive.notInList);
+            archive.addUrlToList(parsedUrl, () => {
+            });
+          }
+          httpHelpers.serveAssets(res, './web/public/loading.html', null, 302); 
+          
         }
       });  
     });

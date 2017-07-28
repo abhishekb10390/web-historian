@@ -29,12 +29,19 @@ exports.serveAssets = function(res, asset, callback, statusCode) {
   
 };
 
+exports.sendResponse = (response, data, statusCode) => {
+  statusCode = statusCode || 200;
+  response.writeHead(statusCode, exports.headers);
+  response.end(data);
+};
 
-// exports.sendResponse = (response, data, statusCode) => {
-//   statusCode = statusCode || 200;
-//   response.writeHead(statusCode, exports.headers);
-//   response.end(JSON.stringify(data));
-// };
+exports.sendRedirect = (response, location, statusCode) => {
+  statusCode = statusCode || 302;
+  response.writeHead(statusCode, {Location: location});
+  response.end();
+};
 
-
+exports.send404 = (response) => {
+  exports.sendResponse(response, '404: Page not found', 404);
+};
 // As you progress, keep thinking about what helper functions you can put here!

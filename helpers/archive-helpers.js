@@ -43,16 +43,18 @@ exports.isUrlInList = function(url, callback) {
 };
 
 exports.addUrlToList = function(url, callback) {
-  fs.appendFile(
-    exports.paths.list, 
-    url + '\n', 
-    (err) => {
-      if (err) {
-        throw err;
+  if (url.startsWith('www')) {
+    fs.appendFile(
+      exports.paths.list, 
+      url + '\n', 
+      (err) => {
+        if (err) {
+          throw err;
+        }
+        callback();
       }
-      callback();
-    }
-  );
+    );
+  }
 };
 
 exports.isUrlArchived = function(url, callback) {
